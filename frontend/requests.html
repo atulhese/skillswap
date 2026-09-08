@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SkillSwap - Requests</title>
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="card flex-header">
+
+        <div>
+
+            <h2>
+                Swap Requests
+            </h2>
+
+            <p>
+                Manage incoming skill
+                swap requests.
+            </p>
+
+        </div>
+
+
+        <button
+            class="logout-btn"
+            onclick="logout()">
+
+            Logout
+
+        </button>
+
+    </div>
+
+
+    <!-- NAV -->
+
+    <div class="nav">
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="skills.html">
+            My Skills
+        </a>
+
+        <a href="matches.html">
+            Find Matches
+        </a>
+
+        <a href="requests.html">
+            Swap Requests
+        </a>
+
+        <a href="swaps.html">
+            Active Swaps
+        </a>
+
+    </div>
+
+
+    <!-- REQUESTS -->
+
+    <div class="card">
+
+        <h2>
+            Received Swap Requests
+        </h2>
+
+
+        <button
+            class="action-btn"
+            onclick="loadRequests()">
+
+            Refresh Requests
+
+        </button>
+
+
+        <div id="requests">
+
+            Loading requests...
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script src="js/requests.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SkillSwap</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- ================================= -->
+    <!-- AUTH SECTION -->
+    <!-- ================================= -->
+
+    <div id="authSection">
+
+        <div class="auth-logo">
+            SS
+        </div>
+
+        <h1 class="auth-title">
+            Welcome to SkillSwap
+        </h1>
+
+
+        <!-- LOGIN / REGISTER TABS -->
+
+        <div class="auth-tabs">
+
+            <button
+                class="tab-btn active"
+                onclick="switchAuthTab('login')"
+            >
+                Sign In
+            </button>
+
+
+            <button
+                class="tab-btn"
+                onclick="switchAuthTab('register')"
+            >
+                Sign Up
+            </button>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- LOGIN FORM -->
+        <!-- ================================= -->
+
+        <div
+            id="loginForm"
+            class="auth-form"
+        >
+
+            <label>
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="loginEmail"
+                placeholder="Enter your email"
+            >
+
+
+            <label>
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Enter your password"
+            >
+
+
+            <button
+                class="primary-btn"
+                onclick="login()"
+            >
+                Sign In
+            </button>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- REGISTER FORM -->
+        <!-- ================================= -->
+
+        <div
+            id="registerForm"
+            class="auth-form hidden"
+        >
+
+            <label>
+                Full Name
+            </label>
+
+            <input
+                type="text"
+                id="registerName"
+                placeholder="Enter your name"
+            >
+
+
+            <label>
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="registerEmail"
+                placeholder="Enter your email"
+            >
+
+
+            <label>
+                Phone Number
+            </label>
+
+            <input
+                type="tel"
+                id="registerPhone"
+                placeholder="Enter your phone number"
+            >
+
+
+            <label>
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="registerPassword"
+                placeholder="Create password"
+            >
+
+
+            <button
+                class="primary-btn"
+                onclick="registerUser()"
+            >
+                Sign Up
+            </button>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================================= -->
+    <!-- DASHBOARD -->
+    <!-- ================================= -->
+
+    <div
+        id="dashboardSection"
+        class="hidden"
+    >
+
+
+        <!-- HEADER -->
+
+        <div class="card flex-header">
+
+            <div>
+
+                <h2 id="welcomeText">
+                    Welcome
+                </h2>
+
+                <p>
+                    Manage your skills and discover learning partners.
+                </p>
+
+            </div>
+
+
+            <button
+                class="logout-btn"
+                onclick="logout()"
+            >
+                Logout
+            </button>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- NAVIGATION -->
+        <!-- ================================= -->
+
+        <div class="nav">
+
+            <button
+                id="nav-skillsSection"
+                class="active-nav"
+                onclick="showSection('skillsSection')"
+            >
+                My Skills
+            </button>
+
+
+            <button
+                id="nav-matchSection"
+                onclick="showSection('matchSection')"
+            >
+                Find Matches
+            </button>
+
+
+            <button
+                id="nav-requestSection"
+                onclick="showSection('requestSection')"
+            >
+                Swap Requests
+            </button>
+
+
+            <button
+                id="nav-swapSection"
+                onclick="showSection('swapSection')"
+            >
+                Active Swaps
+            </button>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- MY SKILLS -->
+        <!-- ================================= -->
+
+        <div
+            id="skillsSection"
+            class="card"
+        >
+
+            <h2>
+                Configure Your Skills
+            </h2>
+
+
+            <p>
+                Add skills you can teach and skills you want to learn.
+            </p>
+
+
+            <label>
+                Select Skill
+            </label>
+
+
+            <select id="skillSelect">
+
+                <option value="">
+                    -- Choose a Skill --
+                </option>
+
+            </select>
+
+
+
+            <label>
+                Goal Type
+            </label>
+
+
+            <select id="skillType">
+
+    <option value="">
+        -- Choose Goal Type --
+    </option>
+
+    <option value="OFFER">
+        I Can Teach (Offer)
+    </option>
+
+    <option value="WANT">
+        I Want To Learn (Want)
+    </option>
+
+</select>
+
+
+
+            <button
+                class="action-btn"
+                onclick="addSkill()"
+            >
+                Add Skill to Profile
+            </button>
+
+
+            <hr>
+
+
+            <h3>
+                My Profile Portfolio
+            </h3>
+
+
+            <div id="mySkills"></div>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- FIND MATCHES -->
+        <!-- ================================= -->
+
+        <div
+            id="matchSection"
+            class="card hidden"
+        >
+
+            <h2>
+                Smart Skill Matches
+            </h2>
+
+
+            <p>
+                Find users whose teaching objectives match your learning goals.
+            </p>
+
+
+            <button
+                class="action-btn"
+                onclick="findMatches()"
+            >
+                Refresh Matches
+            </button>
+
+
+            <div id="matches"></div>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- SWAP REQUESTS -->
+        <!-- ================================= -->
+
+        <div
+            id="requestSection"
+            class="card hidden"
+        >
+
+            <h2>
+                Received Swap Requests
+            </h2>
+
+
+            <button
+                class="action-btn"
+                onclick="loadRequests()"
+            >
+                Refresh Requests
+            </button>
+
+
+            <div id="requests"></div>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- ACTIVE SWAPS -->
+        <!-- ================================= -->
+
+        <div
+            id="swapSection"
+            class="card hidden"
+        >
+
+            <h2>
+                Active Skill Swaps
+            </h2>
+
+
+            <button
+                class="action-btn"
+                onclick="loadSwaps()"
+            >
+                Refresh Swaps
+            </button>
+
+
+            <div id="swaps"></div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="js/app.js"></script>
+
+
+</body>
+
+</html>

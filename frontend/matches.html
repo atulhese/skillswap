@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SkillSwap - Find Matches</title>
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="card flex-header">
+
+        <div>
+
+            <h2>
+                Find Skill Matches
+            </h2>
+
+            <p>
+                Find users whose skills
+                match your goals.
+            </p>
+
+        </div>
+
+
+        <button
+            class="logout-btn"
+            onclick="logout()">
+
+            Logout
+
+        </button>
+
+    </div>
+
+
+    <!-- NAV -->
+
+    <div class="nav">
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="skills.html">
+            My Skills
+        </a>
+
+        <a href="matches.html">
+            Find Matches
+        </a>
+
+        <a href="requests.html">
+            Swap Requests
+        </a>
+
+        <a href="swaps.html">
+            Active Swaps
+        </a>
+
+    </div>
+
+
+    <!-- MATCHES -->
+
+    <div class="card">
+
+        <h2>
+            Smart Skill Matches
+        </h2>
+
+        <p>
+            Users who can teach what you
+            want to learn and want what
+            you can teach.
+        </p>
+
+
+        <button
+            class="action-btn"
+            onclick="findMatches()">
+
+            Refresh Matches
+
+        </button>
+
+
+        <div id="matches">
+
+            Loading matches...
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script src="js/matches.js"></script>
+
+</body>
+</html>
