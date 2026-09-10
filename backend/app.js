@@ -171,6 +171,7 @@ app.post("/api/login", (req, res) => {
             res.json({
 
                 message: "Login successful",
+
                 user: result[0]
 
             });
@@ -264,7 +265,8 @@ app.post("/api/user-skills", (req, res) => {
                 if (err.code === "ER_DUP_ENTRY") {
 
                     return res.status(400).json({
-                        message: "You already added this skill with this type"
+                        message:
+                            "You already added this skill with this type"
                     });
 
                 }
@@ -279,6 +281,7 @@ app.post("/api/user-skills", (req, res) => {
             res.status(201).json({
 
                 message: "Skill added successfully",
+
                 skill_id: result.insertId
 
             });
@@ -441,7 +444,9 @@ app.get("/api/matches/:user_id", (req, res) => {
             ON other_want_skill.skill_id = other_want.skill_id
 
         WHERE my_want.user_id = ?
+
         AND my_want.skill_type = 'WANT'
+
         AND other_user.user_id <> ?
 
     `;
@@ -588,7 +593,8 @@ app.post("/api/swap-request", (req, res) => {
             ) {
 
                 return res.status(400).json({
-                    message: "This is not a valid mutual skill match"
+                    message:
+                        "This is not a valid mutual skill match"
                 });
 
             }
@@ -606,7 +612,7 @@ app.post("/api/swap-request", (req, res) => {
                 AND receiver_id = ?
                 AND offered_skill_id = ?
                 AND requested_skill_id = ?
-                AND swap_status = 'Pending'
+                AND LOWER(swap_status) = 'pending'
 
             `;
 
@@ -625,10 +631,14 @@ app.post("/api/swap-request", (req, res) => {
 
                     if (err) {
 
-                        console.log("Duplicate Check Error:", err);
+                        console.log(
+                            "Duplicate Check Error:",
+                            err
+                        );
 
                         return res.status(500).json({
-                            message: "Unable to check existing request",
+                            message:
+                                "Unable to check existing request",
                             error: err.message
                         });
 
@@ -637,7 +647,8 @@ app.post("/api/swap-request", (req, res) => {
                     if (duplicateResult.length > 0) {
 
                         return res.status(400).json({
-                            message: "Swap request already sent"
+                            message:
+                                "Swap request already sent"
                         });
 
                     }
@@ -678,10 +689,14 @@ app.post("/api/swap-request", (req, res) => {
 
                             if (err) {
 
-                                console.log("Insert Request Error:", err);
+                                console.log(
+                                    "Insert Request Error:",
+                                    err
+                                );
 
                                 return res.status(500).json({
-                                    message: "Unable to send swap request",
+                                    message:
+                                        "Unable to send swap request",
                                     error: err.message
                                 });
 
@@ -689,9 +704,11 @@ app.post("/api/swap-request", (req, res) => {
 
                             res.status(201).json({
 
-                                message: "Swap request sent successfully",
+                                message:
+                                    "Swap request sent successfully",
 
-                                swap_id: result.insertId
+                                swap_id:
+                                    result.insertId
 
                             });
 
@@ -820,11 +837,16 @@ app.put(
 
                 if (err) {
 
-                    console.log("Get Request Error:", err);
+                    console.log(
+                        "Get Request Error:",
+                        err
+                    );
 
                     return res.status(500).json({
-                        message: "Unable to find request",
-                        error: err.message
+                        message:
+                            "Unable to find request",
+                        error:
+                            err.message
                     });
 
                 }
@@ -832,7 +854,8 @@ app.put(
                 if (result.length === 0) {
 
                     return res.status(404).json({
-                        message: "Swap request not found"
+                        message:
+                            "Swap request not found"
                     });
 
                 }
@@ -845,11 +868,13 @@ app.put(
                 // =====================================
 
                 if (
-                    request.swap_status.toLowerCase() !== "pending"
+                    request.swap_status.toLowerCase()
+                    !== "pending"
                 ) {
 
                     return res.status(400).json({
-                        message: "This request has already been processed"
+                        message:
+                            "This request has already been processed"
                     });
 
                 }
@@ -881,19 +906,27 @@ app.put(
 
                         if (err) {
 
-                            console.log("Accept Error:", err);
+                            console.log(
+                                "Accept Error:",
+                                err
+                            );
 
                             return res.status(500).json({
-                                message: "Unable to accept request",
-                                error: err.message
+                                message:
+                                    "Unable to accept request",
+                                error:
+                                    err.message
                             });
 
                         }
 
-                        if (updateResult.affectedRows === 0) {
+                        if (
+                            updateResult.affectedRows === 0
+                        ) {
 
                             return res.status(400).json({
-                                message: "Request already processed"
+                                message:
+                                    "Request already processed"
                             });
 
                         }
@@ -904,7 +937,8 @@ app.put(
                             message:
                                 "Swap request accepted successfully",
 
-                            swap_id: request.swap_id
+                            swap_id:
+                                request.swap_id
 
                         });
 
@@ -950,11 +984,16 @@ app.put(
 
                 if (err) {
 
-                    console.log("Reject Error:", err);
+                    console.log(
+                        "Reject Error:",
+                        err
+                    );
 
                     return res.status(500).json({
-                        message: "Unable to reject request",
-                        error: err.message
+                        message:
+                            "Unable to reject request",
+                        error:
+                            err.message
                     });
 
                 }
@@ -970,7 +1009,8 @@ app.put(
 
                 res.json({
 
-                    message: "Swap request rejected"
+                    message:
+                        "Swap request rejected"
 
                 });
 
@@ -981,28 +1021,26 @@ app.put(
 );
 
 
-// =====================================
-// GET ACTIVE SWAPS
-// =====================================
+// =====================================================
+// GET ACTIVE / COMPLETED SWAPS
+// =====================================================
 
-/*
-    IMPORTANT:
+app.get("/api/swaps/:userId", (req, res) => {
 
-    Your database currently has only:
+    const userId = Number(req.params.userId);
 
-    swap_requests
+    if (!userId) {
 
-    and does NOT have:
+        return res.status(400).json({
 
-    swaps
+            success: false,
 
-    Therefore we use ACCEPTED records from
-    swap_requests as active swaps.
-*/
+            message: "Invalid user ID"
 
-app.get("/api/swaps/:user_id", (req, res) => {
+        });
 
-    const userId = req.params.user_id;
+    }
+
 
     const sql = `
 
@@ -1022,89 +1060,94 @@ app.get("/api/swaps/:user_id", (req, res) => {
 
             sr.swap_status,
 
-            CASE
+            sender.name AS sender_name,
 
-                WHEN sr.sender_id = ?
+            receiver.name AS receiver_name,
 
-                THEN receiver.name
+            offered.skill_name AS offered_skill,
 
-                ELSE sender.name
-
-            END AS partner_name,
-
-            CASE
-
-                WHEN sr.sender_id = ?
-
-                THEN offered_skill.skill_name
-
-                ELSE requested_skill.skill_name
-
-            END AS your_skill,
-
-            CASE
-
-                WHEN sr.sender_id = ?
-
-                THEN requested_skill.skill_name
-
-                ELSE offered_skill.skill_name
-
-            END AS partner_skill
+            requested.skill_name AS requested_skill
 
         FROM swap_requests sr
 
-        JOIN users sender
-            ON sender.user_id = sr.sender_id
+        INNER JOIN users sender
+            ON sr.sender_id = sender.user_id
 
-        JOIN users receiver
-            ON receiver.user_id = sr.receiver_id
+        INNER JOIN users receiver
+            ON sr.receiver_id = receiver.user_id
 
-        JOIN skills offered_skill
-            ON offered_skill.skill_id = sr.offered_skill_id
+        INNER JOIN skills offered
+            ON sr.offered_skill_id = offered.skill_id
 
-        JOIN skills requested_skill
-            ON requested_skill.skill_id = sr.requested_skill_id
+        INNER JOIN skills requested
+            ON sr.requested_skill_id = requested.skill_id
 
         WHERE
+
             (
                 sr.sender_id = ?
                 OR
                 sr.receiver_id = ?
             )
 
-        AND sr.swap_status = 'Accepted'
+            AND
 
-        ORDER BY sr.swap_id DESC
+            (
+                LOWER(sr.swap_status) = 'accepted'
+
+                OR
+
+                LOWER(sr.swap_status) = 'completed'
+            )
+
+        ORDER BY sr.swap_date DESC
 
     `;
+
 
     db.query(
 
         sql,
 
-        [
-            userId,
-            userId,
-            userId,
-            userId,
-            userId
-        ],
+        [userId, userId],
 
-        (err, result) => {
+        (err, results) => {
 
             if (err) {
 
-                console.log("Swaps Error:", err);
+                console.error(
+                    "GET SWAPS ERROR:",
+                    err
+                );
 
                 return res.status(500).json({
-                    message: "Unable to load active swaps",
-                    error: err.message
+
+                    success: false,
+
+                    message:
+                        "Unable to load swaps",
+
+                    error:
+                        err.message
+
                 });
 
             }
 
-            res.json(result);
+
+            console.log(
+                `Swaps for user ${userId}:`,
+                results
+            );
+
+
+            res.json({
+
+                success: true,
+
+                swaps: results
+
+            });
 
         }
     );
@@ -1144,11 +1187,16 @@ app.put(
 
                 if (err) {
 
-                    console.log("Complete Swap Error:", err);
+                    console.log(
+                        "Complete Swap Error:",
+                        err
+                    );
 
                     return res.status(500).json({
-                        message: "Unable to complete swap",
-                        error: err.message
+                        message:
+                            "Unable to complete swap",
+                        error:
+                            err.message
                     });
 
                 }
