@@ -452,7 +452,15 @@ app.get("/api/matches/:user_id", (req, res) => {
 
             other_offer_skill.skill_name AS they_can_teach,
 
-            other_want_skill.skill_name AS they_want_to_learn
+            other_want_skill.skill_name AS they_want_to_learn,
+
+            my_offer.skill_id AS offered_skill_id,
+
+            my_want.skill_id AS wanted_skill_id,
+
+            other_offer.skill_id AS matched_offer_skill_id,
+
+            other_want.skill_id AS matched_want_skill_id
 
         FROM user_skills my_want
 
