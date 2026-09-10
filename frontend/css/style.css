@@ -88,6 +88,17 @@ hr { margin: 28px 0; border: 0; border-top: 1px solid var(--line); }
 .skill-box, .match-card, .request-card { margin-top: 14px; padding: 18px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface-soft); }
 .match-card button, .request-card button { margin: 12px 8px 0 0; padding: 10px 14px; border: 0; border-radius: 9px; background: var(--brand); color: #fff; font-weight: 700; }
 #matches, #requests, #swaps, #mySkills { margin-top: 22px; }
+.swap-card { margin-top: 14px; padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-soft); }
+.swap-card-header { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; }
+.swap-status { padding: 5px 10px; border-radius: 999px; background: #e8f7f0; color: var(--success); font-size: 12px; font-weight: 800; }
+.meeting-panel { margin-top: 18px; padding: 17px; border-radius: 12px; }
+.meeting-ready { background: var(--brand-soft); }
+.meeting-pending { background: #fff8f8; }
+.meeting-panel h4 { margin: 0 0 4px; }
+.meeting-panel .action-btn { color: #fff; }
+.meeting-meta { margin-top: 12px !important; font-size: 12px !important; }
+.complete-btn { margin-top: 14px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--muted); font-weight: 700; }
+.complete-btn:hover { color: var(--brand); border-color: var(--brand); }
 
 @media (max-width: 700px) {
     .container, #dashboardSection { width: min(100% - 24px, 560px); padding-top: 20px; }
