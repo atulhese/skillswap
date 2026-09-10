@@ -4,6 +4,50 @@ const cors = require("cors");
 
 const app = express();
 
+const ZOOM_CONNECTOR_UID = "zoom/skillswap-zoom-meetings";
+const ZOOM_MEETING_SCOPES = ["meeting:write:meeting", "user:read"];
+
+async function getZoomToken() {
+    const { getToken } = await import("@vercel/connect");
+    return getToken(
+        ZOOM_CONNECTOR_UID,
+        {
+            subject: { type: "app" },
+            scopes: ZOOM_MEETING_SCOPES
+        }
+    );
+}
+
+async function createZoomMeeting(swapId, senderId, receiverId) {
+    const accessToken = await getZoomToken();
+    const response = await fetch("https://api.zoom.us/v2/users/me/meetings", {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            topic: `SkillSwap meeting #${swapId}`,
+            type: 2,
+            duration: 60,
+            settings: {
+                join_before_host: true,
+                waiting_room: false,
+                participant_video: true,
+                host_video: true
+            },
+            agenda: `Private skill exchange between users ${senderId} and ${receiverId}`
+        })
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || "Zoom meeting creation failed");
+    }
+
+    return data;
+}
+
 
 // =====================================
 // MIDDLEWARE
@@ -899,14 +943,62 @@ app.put(
                         }
 
 
-                        res.json({
+                        createZoomMeeting(
+                            request.swap_id,
+                            request.sender_id,
+                            request.receiver_id
+                        )
+                            .then((meeting) => {
+                                const meetingSql = `
+                                    UPDATE swap_requests
+                                    SET zoom_meeting_id = ?,
+                                        zoom_join_url = ?,
+                                        zoom_start_url = ?,
+                                        zoom_password = ?,
+                                        zoom_start_time = ?,
+                                        zoom_duration = ?
+                                    WHERE swap_id = ?
+                                `;
 
-                            message:
-                                "Swap request accepted successfully",
+                                db.query(
+                                    meetingSql,
+                                    [
+                                        String(meeting.id),
+                                        meeting.join_url,
+                                        meeting.start_url,
+                                        meeting.password || null,
+                                        meeting.start_time ? new Date(meeting.start_time) : null,
+                                        meeting.duration || 60,
+                                        request.swap_id
+                                    ],
+                                    (meetingError) => {
+                                        if (meetingError) {
+                                            console.log("Zoom Meeting Save Error:", meetingError);
+                                            return res.status(500).json({
+                                                message: "Request accepted, but the Zoom meeting could not be saved",
+                                                error: meetingError.message
+                                            });
+                                        }
 
-                            swap_id: request.swap_id
-
-                        });
+                                        res.json({
+                                            message: "Swap accepted and Zoom meeting created",
+                                            swap_id: request.swap_id,
+                                            meeting: {
+                                                join_url: meeting.join_url,
+                                                start_time: meeting.start_time,
+                                                duration: meeting.duration
+                                            }
+                                        });
+                                    }
+                                );
+                            })
+                            .catch((zoomError) => {
+                                console.log("Zoom Meeting Error:", zoomError);
+                                res.status(502).json({
+                                    message: "Request was accepted, but Zoom meeting creation failed",
+                                    error: zoomError.message
+                                });
+                            });
 
                     }
                 );
@@ -1021,6 +1113,11 @@ app.get("/api/swaps/:user_id", (req, res) => {
             sr.swap_date,
 
             sr.swap_status,
+            sr.zoom_meeting_id,
+            sr.zoom_join_url,
+            sr.zoom_password,
+            sr.zoom_start_time,
+            sr.zoom_duration,
 
             CASE
 
